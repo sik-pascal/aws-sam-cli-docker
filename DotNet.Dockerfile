@@ -1,9 +1,12 @@
 FROM python:3.8-slim
 
 # RUN apk update && apk add python3-dev && apk add build-essential
-RUN apt-get update -y && apt-get install zip -y && apt-get install git -y
-RUN pip install cfn-lint
-RUN pip install pydot
+RUN apt-get update -y  \
+    && apt-get install zip -y \ 
+    && apt-get install git -y \
+    && apt-get install curl -y \
+    && apt-get install libicu-dev -y \
+    && rm -rf /var/lib/apt/lists/*
 RUN pip install aws-sam-cli
 
 ARG DOTNET_INSTALL_URL="https://dot.net/v1/dotnet-install.sh"
@@ -19,4 +22,3 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 WORKDIR /sam
-CMD tail -f /dev/null
