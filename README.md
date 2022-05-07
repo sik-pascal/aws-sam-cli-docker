@@ -1,32 +1,44 @@
 # aws-sam-cli-docker
-Use SAM CLI from docker
+Use [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) from docker. 
+Build corresponding image and add alias to make it available system-wide:
+> **Windows (powershell):** Open powershell profile with `notepad $profile`.
+
+> **Linux:** Adjust `~/.bashrc` or `~/.bash_aliases`  
 
 ## cfn-lint
-Build image with
-
 `
-docker build -t cfn-lint:latest -f Dockerfile.Cfn . 
+docker build -t cfn-lint:latest -f Cfn.Dockerfile . 
 `
 
-### Windows
-Set alias: open powershell profile with `notepad $profile` and add:
+Make `cfn-lint` available in 
 
-```powershell
-Function CFNLINT { docker run --rm -it -v ${pwd}:/lint cfn-lint:latest cfn-lint $args }
-Set-Alias -Name cfn-lint -Value CFNLINT
+### *PowerShell*
+ ```powershell
+ Function CFNLINT { docker run --rm -it -v ${pwd}:/lint cfn-lint:latest cfn-lint $args }
+ Set-Alias -Name cfn-lint -Value CFNLINT
+ ```
+
+### *Linux*
+```sh
+alias cfn-lint='docker run --rm -it -v $(pwd):/lint cfn-lint:latest cfn-lint'
 ```
 
-## sam-cli (dotnet)
-Build image with
+## sam (dotnet)
 
 `
-docker build -t sam-dotnet:latest -f Dockerfile.DotNet . 
+docker build -t sam-dotnet:v1 -f DotNet.Dockerfile . 
 `
 
-### Windows
-Set alias: open powershell profile with `notepad $profile` and add:
+Make `sam-dotnet` available in 
 
+### *PowerShell*
 ```powershell
-Function SAMDOTNET { docker run --rm -it -v $env:userprofile\\.aws:/root/.aws -v ${pwd}:/sam-dotnet sam-dotnet:latest sam $args }
+Function SAMDOTNET { docker run --rm -it -v $env:userprofile\\.aws:/root/.aws -v ${pwd}:/sam sam-dotnet:v1 sam $args }
 Set-Alias -Name sam-dotnet -Value SAMDOTNET
 ```
+
+### *Linux*
+```sh
+alias sam-dotnet='docker run --rm -it -v ~/.aws:/root/.aws -v $(pwd):/sam sam-dotnet:v2 sam'
+```
+
